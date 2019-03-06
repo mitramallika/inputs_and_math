@@ -1,0 +1,47 @@
+$("body").on("keyup keydown keypress change", "input", function (e) {
+	const $this_input = $(this);
+	const $this_row = $this_input.closest("[data-tariff-percent]"); //closest finds closest ancestor (find goes down through ancestors) that has attribute data-tariff-percent//
+	const $span_pre_total = $this_row.find(".pre_total").find("span");
+	const $span_post_total = $this_row.find(".post_total").find("span");
+	let qty = $this_row.find(".qty").find("input").val(); //whatever the row is, i want it to find (descendents) the class quantify//
+	let cost = $this_row.find(".cost").find("input").val(); //using "let" instead of "const" because we will need to change them//
+	let tariff = $this_row.data("tariff-percent");
+
+	qty = parseFloat(qty);
+	cost = parseFloat(cost);
+	tariff = parseFloat(tariff);
+
+	let tariff_decimal = tariff / 100;
+	let pre_tariff = qty * cost; //this calculates "total before tariff"//
+	let post_tariff = (qty * cost) * (1 + tariff_decimal) //this calculates "total after tariff" - total quantity times 1+the tariff//
+
+	console.log("Qty", qty);
+	console.log("Cost", cost);
+	console.log("Tariff", tariff);
+
+	console.log("pre_tariff", pre_tariff);
+	console.log("post_tariff", post_tariff);
+
+	$span_pre_total.text(pre_tariff);
+	$span_post_total.text(post_tariff);
+});
+
+$("body").on("click", ".calculate", function (e) {
+	e.preventDefault();
+
+	let pre_total = 0;
+
+	$(".pre_total").each(function () {
+		const $this_pre_total = $(this);
+		const $this_pre_total_span = $this_pre_total.find("span");
+
+		let value = $this_pre_total_span.text();
+
+		value = parseFloat(value);
+
+		pre_total = pre_total + value;
+	});
+
+	console.log("Working!");
+	console.log(pre_total);
+});
